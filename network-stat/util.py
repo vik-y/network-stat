@@ -8,6 +8,8 @@ log.basicConfig(filename="log.txt",filemode='a',
                     datefmt='%H:%M:%S',
                     level=log.DEBUG)
 
+# A helper function to check if the host is connected to Internet or not.
+# Returns True if connected, False otherwise.
 def internetOn():
     try:
         response=urllib2.urlopen('http://www.google.com',timeout=1)
@@ -26,15 +28,10 @@ def pingUrl(url, count):
     mdev = re.search("/[0-9]+[.][0-9]+ ", pingData).group()[1:-1]
     log.info(avg + " " + mdev)
     return avg, mdev
-def pingDNS(dns):
-
-    return avg, mdev
-
 
 def linkQuality():
     pat = re.compile("[0-9]+/[0-9]+")
     temp = re.search(pat, os.popen("iwconfig").read())
-
     if temp:
         # Wifi interface was present
         log.info("Wifi Interface was present")
