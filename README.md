@@ -30,4 +30,4 @@ Analyze the collected data to:
 This repository only deals with the data collection part. There's a different repository for analyzing the collected data which will be put up soon. 
 
 ### Contributor Notes
-If you are interested to contribute in this project, then you can reach out to me at vikas.yadav@iiitb.org. Also there are various comments in code which tells what is not implemented yet, you can pick that up and raise a pull request. 
+If you are interested to contribute in this project, then you can reach out to me at vikas.yadav@iiitb.org. Also there are various comments in code which tells what is not implemented yet, you can pick that up and raise a pull request when you are done. As of now there's no fixed architecture for this project, comments and suggestions regarding improving the architecture of the project are most welcome. 
