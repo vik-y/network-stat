@@ -60,8 +60,30 @@ def getDeviceMac():
     # Note: Cant assume that Device mac will be same as
     return 1
 
+# A helper function to get MAC address of the access point to which
+# the client is connected
 def getAccessPointMac():
-    # If connected to a wifi interface then this should return
-    # the mac address of the wifi interface
-    # If not connected to a wifi interface then this should return 0
-    return 1
+    pat = re.compile("Point:.*")
+    temp = re.search(pat, os.popen("iwconfig").read())
+
+    if temp:
+        # Wifi interface was present
+        log.info("Wifi Interface was present")
+        mac = temp.group().split()[1].strip() # To get the mac address
+        log.info(mac)
+        return mac
+    else:
+        log.error("No wifi interface found")
+
+# A helper function to get wifi interface name
+# We cannot assume wifi Interface name to be wlan0 all the time.
+def wifiInterfaceName():
+    temp = os.popen("iwconfig").read() # Runs and gets iwconfig command output
+    result = re.search(".*802", temp)
+
+    if result:
+        interfaceName = result.group().split()[0]
+        log.info("Wifi Interface Name is %s" % (interfaceName))
+        return interfaceName
+    else:
+        log.error("No wifi interface found")
