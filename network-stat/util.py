@@ -54,10 +54,10 @@ def getFrequency():
     else:
         log.error("No wifi interface found")
 
-
 def getDeviceMac():
-    pat = re.compile(wifiInterfaceName()+".*")
-    temp = re.search(pat, os.popen("/sbin/ifconfig | grep " + wifiInterfaceName()).read())
+    interfaceName = wifiInterfaceName()
+    pat = re.compile(interfaceName+".*")
+    temp = re.search(pat, os.popen("/sbin/ifconfig | grep " + interfaceName).read())
 
     if temp:
         log.info("Device Mac retrieved")
