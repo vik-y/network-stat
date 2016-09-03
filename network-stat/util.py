@@ -87,3 +87,15 @@ def wifiInterfaceName():
         return interfaceName
     else:
         log.error("No wifi interface found")
+
+# A function to get IP address assigned to the Wifi Interface.
+def getHostIP():
+    # First get the interface name using the wifiInterfaceName() function
+    # Then you can use ifconfig and regex to get the relevant data
+    return 1
+
+# A function to get Subnet mask assigned to the Wifi Interface
+def getHostSubnetMask():
+    # First get the interface name using the wifiInterfaceName() function
+    # Then you can use ifconfig and regex to get the relevant data
+    return 1
