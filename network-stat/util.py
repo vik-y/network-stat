@@ -54,11 +54,18 @@ def getFrequency():
     else:
         log.error("No wifi interface found")
 
-
 def getDeviceMac():
-    # Returns mac address of the wifi interface of computer.
-    # Note: Cant assume that Device mac will be same as
-    return 1
+    interfaceName = wifiInterfaceName()
+    pat = re.compile(interfaceName+".*")
+    temp = re.search(pat, os.popen("/sbin/ifconfig | grep " + interfaceName).read())
+
+    if temp:
+        log.info("Device Mac retrieved")
+        mac = temp.group().split()[-1].strip()
+        log.info(mac)
+        return mac
+    else:
+        log.error("No wifi interface found")
 
 # A helper function to get MAC address of the access point to which
 # the client is connected
