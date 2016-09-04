@@ -97,12 +97,30 @@ def wifiInterfaceName():
 
 # A function to get IP address assigned to the Wifi Interface.
 def getHostIP():
-    # First get the interface name using the wifiInterfaceName() function
-    # Then you can use ifconfig and regex to get the relevant data
+    interfaceName = wifiInterfaceName()
+    pat = re.compile("inet addr:.*")
+    temp = re.search(pat, os.popen("ifconfig " + interfaceName).read())
+
+    if temp:
+        log.info("Device IPv4 address obtained")
+        ipv4 = temp.group().split(":")[1].split(" ")[0].strip()
+        log.info(ipv4)
+        return ipv4
+    else:
+        log.error("No wifi interface found")
     return 1
 
 # A function to get Subnet mask assigned to the Wifi Interface
 def getHostSubnetMask():
-    # First get the interface name using the wifiInterfaceName() function
-    # Then you can use ifconfig and regex to get the relevant data
+    interfaceName = wifiInterfaceName()
+    pat = re.compile("Mask:.*")
+    temp = re.search(pat, os.popen("ifconfig " + interfaceName).read())
+
+    if temp:
+        log.info("Device subnet mask obtained")
+        subnet = temp.group().split(":")[1].strip()
+        log.info(subnet)
+        return subnet
+    else:
+        log.error("No wifi interface found")
     return 1
