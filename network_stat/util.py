@@ -39,7 +39,9 @@ def linkQuality():
         log.info(quality)
         return quality
     else:
-        log.error("No wifi interface found")
+        msg = "No wifi interface found"
+        log.error(msg)
+        raise Exception(msg)
 
 def getFrequency():
     pat = re.compile("[25].*G")
@@ -52,7 +54,9 @@ def getFrequency():
         log.info(frequency)
         return frequency
     else:
-        log.error("No wifi interface found")
+        msg = "No wifi interface found"
+        log.error(msg)
+        raise Exception(msg)
 
 def getDeviceMac():
     interfaceName = wifiInterfaceName()
@@ -65,7 +69,9 @@ def getDeviceMac():
         log.info(mac)
         return mac
     else:
-        log.error("No wifi interface found")
+        msg = "No wifi interface found"
+        log.error(msg)
+        raise Exception(msg)
 
 # A helper function to get MAC address of the access point to which
 # the client is connected
@@ -80,7 +86,9 @@ def getAccessPointMac():
         log.info(mac)
         return mac
     else:
-        log.error("No wifi interface found")
+        msg = "No wifi interface found"
+        log.error(msg)
+        raise Exception(msg)
 
 # A helper function to get wifi interface name
 # We cannot assume wifi Interface name to be wlan0 all the time.
@@ -122,5 +130,21 @@ def getHostSubnetMask():
         log.info(subnet)
         return subnet
     else:
-        log.error("No wifi interface found")
-    return 1
+        msg = "Unable to find subnet mask"
+        log.error(msg)
+        raise Exception(msg)
+
+# Expects passed parameter data to be a python dictionary
+def uploadData(data):
+    return True
+
+# Utilises all the functinos that we wrote above and returns a dictionary
+def collectData():
+    info = {}
+    try:
+        info["linkQuality"] = linkQuality()
+        info["ip"] = getHostIP()
+        info["subnet"] = getHostSubnetMask()
+        return info
+    except Exception as error:
+        print error
