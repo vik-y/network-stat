@@ -1,12 +1,12 @@
 import os
 import re
 import logging as log
-import urllib2
+import urllib2, requests
 
 log.basicConfig(filename="log.txt",filemode='a',
                     format='%(asctime)s,%(msecs)d %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
-                    level=log.DEBUG)
+                    level=log.INFO)
 
 # A helper function to check if the host is connected to Internet or not.
 # Returns True if connected, False otherwise.
@@ -90,6 +90,20 @@ def getAccessPointMac():
         log.error(msg)
         raise Exception(msg)
 
+
+def getAccessPointName():
+    result = re.search("ESSID:(.*)?\n", os.popen("iwconfig").read())
+    if result:
+        log.info("Wifi Interface was present")
+        ap = result.group(1).strip()  # To get the mac address
+        log.info("Interface Name: %s" % ap)
+        return ap
+    else:
+        msg = "No Wifi Interface found"
+        log.error(msg)
+        raise Exception(msg)
+
+
 # A helper function to get wifi interface name
 # We cannot assume wifi Interface name to be wlan0 all the time.
 def wifiInterfaceName():
@@ -135,16 +149,50 @@ def getHostSubnetMask():
         raise Exception(msg)
 
 # Expects passed parameter data to be a python dictionary
-def uploadData(data):
-    return True
+def uploadData(data, url, location="google_form"):
+    if location=="google_form":
+        # TODO: Form components are hard coded in code right now. Find mechanisms to remove this hardcoding.
+        payload = {
+            'entry.1368613020' : data["key"],
+            'entry.1038090537' : data["mac"],
+            'entry.66241573': str(data),
+            'draftResponse': '[]',
+            'pageHistory': 0,
+        }
+        headers = {
+            'Referer': url+"viewform",
+            'User-Agent': "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36"
+        }
+
+        response = requests.post(url+"formResponse", data=payload, headers=headers)
+        log.debug(response.text)
+
+        # TODO: Write mechanism to make sure that the upload was successful
+        # Maybe someone can contribute here.
+        return True
+
+def getDebugData():
+    debug = {}
+    commands = ["ifconfig", "iwconfig", "route -n"]
+
+    for command in commands:
+        debug[command] = os.popen(command).read()
+
+    return debug
 
 # Utilises all the functinos that we wrote above and returns a dictionary
 def collectData():
     info = {}
     try:
+        # TODO: Collect ping stats
         info["linkQuality"] = linkQuality()
         info["ip"] = getHostIP()
         info["subnet"] = getHostSubnetMask()
+        info["mac"] = getDeviceMac()
+        info["ap_mac"] = getAccessPointMac()
+        info["ap_name"] = getAccessPointName()
+        info["debug"] = getDebugData()
+
         return info
     except Exception as error:
         print error
